@@ -1,0 +1,677 @@
+/**
+ * Transport for Rory - Dashboard Styles
+ * Inspired by Transport for London's design
+ */
+
+:root {
+  --tfl-blue: #0019a8;
+  --tfl-red: #dc241f;
+  --tfl-good-service: #00782a;
+  --tfl-minor-delays: #ff9800;
+  --tfl-severe-delays: #dc241f;
+  --border-color: #ddd;
+  --bg-light: #f5f5f5;
+  --text-primary: #1c1c1c;
+  --text-secondary: #666;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.6;
+  color: var(--text-primary);
+  background-color: #fff;
+  padding: 20px;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+header {
+  background-color: var(--tfl-blue);
+  color: white;
+  padding: 20px 30px;
+  margin: -20px -20px 30px -20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.subtitle {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  margin-top: 5px;
+}
+
+.section {
+  margin-bottom: 40px;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  border-bottom: 3px solid var(--tfl-blue);
+  padding-bottom: 8px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.section-header .section-title {
+  margin-bottom: 0;
+  flex: 1;
+}
+
+.configure-btn {
+  background-color: var(--tfl-blue);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.configure-btn:hover {
+  background-color: #001580;
+}
+
+.configure-btn:active {
+  transform: translateY(1px);
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+}
+
+.error {
+  background-color: #fee;
+  border: 1px solid var(--tfl-red);
+  color: var(--tfl-red);
+  padding: 15px;
+  border-radius: 4px;
+  margin: 20px 0;
+}
+
+/* Line Status Styles */
+.line-status-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 15px;
+}
+
+.line-status-card {
+  background: white;
+  border: 2px solid var(--border-color);
+  border-radius: 6px;
+  padding: 15px;
+  transition: box-shadow 0.2s;
+}
+
+.line-status-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.line-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.line-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: white;
+  margin-top: 5px;
+}
+
+.status-good {
+  background-color: var(--tfl-good-service);
+}
+
+.status-minor {
+  background-color: var(--tfl-minor-delays);
+}
+
+.status-severe {
+  background-color: var(--tfl-severe-delays);
+}
+
+.status-reason {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: var(--bg-light);
+  border-radius: 4px;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+/* Station Arrivals Styles */
+.station-selector {
+  margin-bottom: 20px;
+}
+
+.station-selector label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--text-primary);
+}
+
+.search-container {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+}
+
+.search-container input[type="text"] {
+  width: 100%;
+  padding: 12px 15px;
+  font-size: 1rem;
+  border: 2px solid var(--border-color);
+  border-radius: 4px;
+  background-color: white;
+  transition: border-color 0.2s;
+}
+
+.search-container input[type="text"]:hover,
+.search-container input[type="text"]:focus {
+  border-color: var(--tfl-blue);
+  outline: none;
+}
+
+.suggestions-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  max-height: 300px;
+  overflow-y: auto;
+  background: white;
+  border: 2px solid var(--tfl-blue);
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  margin-top: -2px;
+}
+
+.suggestion-item {
+  padding: 12px 15px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.suggestion-item:last-child {
+  border-bottom: none;
+}
+
+.suggestion-item:hover,
+.suggestion-item.selected {
+  background-color: var(--bg-light);
+}
+
+.suggestion-item.active {
+  background-color: #e3f2fd;
+}
+
+.no-suggestions {
+  padding: 12px 15px;
+  color: var(--text-secondary);
+  font-style: italic;
+  text-align: center;
+}
+
+.station-selector select {
+  width: 100%;
+  max-width: 400px;
+  padding: 10px 15px;
+  font-size: 1rem;
+  border: 2px solid var(--border-color);
+  border-radius: 4px;
+  background-color: white;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.station-selector select:hover,
+.station-selector select:focus {
+  border-color: var(--tfl-blue);
+  outline: none;
+}
+
+.station-name {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: var(--text-primary);
+}
+
+.line-arrivals {
+  background: white;
+  border: 2px solid var(--border-color);
+  border-radius: 6px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.line-arrivals-header {
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-transform: capitalize;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.arrivals-list {
+  list-style: none;
+}
+
+.arrival-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.arrival-item:last-child {
+  border-bottom: none;
+}
+
+.arrival-info {
+  flex: 1;
+}
+
+.arrival-destination {
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 3px;
+}
+
+.arrival-platform {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.arrival-time {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--tfl-blue);
+  white-space: nowrap;
+  margin-left: 15px;
+}
+
+.arrival-time.due {
+  color: var(--tfl-red);
+}
+
+.no-arrivals {
+  text-align: center;
+  padding: 30px;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+/* Station Configuration Styles */
+.station-config-section {
+  margin-bottom: 25px;
+}
+
+.station-config-section h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--text-primary);
+}
+
+.configured-stations {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.configured-station-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  border: 2px solid var(--border-color);
+  border-radius: 6px;
+  background: white;
+  transition: all 0.2s;
+}
+
+.configured-station-item:hover {
+  background-color: var(--bg-light);
+  border-color: var(--tfl-blue);
+}
+
+.configured-station-info {
+  flex: 1;
+}
+
+.configured-station-name {
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 3px;
+}
+
+.configured-station-lines {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.configured-station-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-icon {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.btn-icon:hover {
+  background-color: var(--bg-light);
+}
+
+.btn-danger:hover {
+  background-color: #fee;
+  color: var(--tfl-red);
+}
+
+/* Station Arrivals Card Styles */
+.station-arrivals-card {
+  background: white;
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.station-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.station-card-name {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.line-arrivals-compact {
+  margin-bottom: 15px;
+}
+
+.line-arrivals-compact:last-child {
+  margin-bottom: 0;
+}
+
+.line-arrivals-header-compact {
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: capitalize;
+  margin-bottom: 10px;
+  color: var(--tfl-blue);
+}
+
+/* Modal Styles */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-content {
+  background-color: white;
+  border-radius: 8px;
+  max-width: 500px;
+  width: 100%;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.modal-large {
+  max-width: 700px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+}
+
+.close-btn:hover {
+  color: var(--tfl-red);
+}
+
+.modal-body {
+  padding: 20px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.modal-description {
+  margin-bottom: 15px;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.line-checkboxes {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.line-checkbox-label {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  border: 2px solid var(--border-color);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.line-checkbox-label:hover {
+  background-color: var(--bg-light);
+  border-color: var(--tfl-blue);
+}
+
+.line-checkbox-label input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  margin-right: 12px;
+  cursor: pointer;
+  accent-color: var(--tfl-blue);
+}
+
+.line-checkbox-label span {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.modal-footer {
+  padding: 20px;
+  border-top: 2px solid var(--border-color);
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-primary {
+  background-color: var(--tfl-blue);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #001580;
+}
+
+.btn-secondary {
+  background-color: var(--bg-light);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+  background-color: #e0e0e0;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+/* Refresh Info */
+.refresh-info {
+  text-align: right;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-top: 30px;
+  padding-top: 15px;
+  border-top: 1px solid var(--border-color);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  body {
+    padding: 10px;
+  }
+
+  header {
+    margin: -10px -10px 20px -10px;
+    padding: 15px 20px;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .section-header .section-title {
+    width: 100%;
+  }
+
+  .configure-btn {
+    width: 100%;
+  }
+
+  .search-container {
+    max-width: 100%;
+  }
+
+  .line-status-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .arrival-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .arrival-time {
+    margin-left: 0;
+    margin-top: 5px;
+  }
+
+  .modal-footer {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}

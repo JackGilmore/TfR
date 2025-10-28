@@ -3,30 +3,125 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Hello, World!</title>
+		<title>Transport for Rory - Live Tube Status</title>
+		<link rel="stylesheet" href="/styles.css?v=3" />
 	</head>
 	<body>
-		<h1 id="heading"></h1>
-		<p>This page comes from a static asset stored at `public/index.html` as configured in `wrangler.jsonc`.</p>
-		<button id="button" type="button">Fetch a random UUID</button>
-		<output id="random" for="button"></output>
-		<script>
-			fetch('/message')
-				.then((resp) => resp.text())
-				.then((text) => {
-					const h1 = document.getElementById('heading');
-					h1.textContent = text;
-				});
+		<header>
+			<h1>Transport for Rory</h1>
+			<div class="subtitle">Live London Underground Status & Arrivals</div>
+		</header>
 
-			const button = document.getElementById("button");
-			button.addEventListener("click", () => {
-				fetch('/random')
-					.then((resp) => resp.text())
-					.then((text) => {
-						const random = document.getElementById('random');
-						random.textContent = text;
-					});
-			});
-		</script>
+		<div class="container">
+			<!-- Tube Line Status Section -->
+			<section class="section">
+				<div class="section-header">
+					<h2 class="section-title">Tube Line Status</h2>
+					<button id="configure-lines-btn" class="configure-btn" type="button">
+						Configure Lines
+					</button>
+				</div>
+				<div id="line-status">
+					<div class="loading">Loading line status...</div>
+				</div>
+			</section>
+
+			<!-- Line Selector Modal -->
+			<div id="line-selector-modal" class="modal" style="display: none;">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h3>Select Tube Lines to Display</h3>
+						<button id="close-modal" class="close-btn" type="button">&times;</button>
+					</div>
+					<div class="modal-body">
+						<div class="line-checkboxes" id="line-checkboxes">
+							<!-- Checkboxes will be populated by JavaScript -->
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button id="select-all-lines" class="btn btn-secondary" type="button">Select All</button>
+						<button id="deselect-all-lines" class="btn btn-secondary" type="button">Deselect All</button>
+						<button id="save-lines" class="btn btn-primary" type="button">Save Selection</button>
+					</div>
+				</div>
+			</div>
+
+			<!-- Station Arrivals Section -->
+			<section class="section">
+				<div class="section-header">
+					<h2 class="section-title">Live Arrivals</h2>
+					<button id="configure-stations-btn" class="configure-btn" type="button">
+						Configure Stations
+					</button>
+				</div>
+
+				<div id="arrivals">
+					<div class="loading">Loading arrivals...</div>
+				</div>
+			</section>
+
+			<!-- Station Configuration Modal -->
+			<div id="station-config-modal" class="modal" style="display: none;">
+				<div class="modal-content modal-large">
+					<div class="modal-header">
+						<h3>Configure Stations</h3>
+						<button id="close-station-modal" class="close-btn" type="button">&times;</button>
+					</div>
+					<div class="modal-body">
+						<div class="station-config-section">
+							<h4>Add Station</h4>
+							<div class="search-container">
+								<input
+									type="text"
+									id="station-config-search"
+									placeholder="Search for a station..."
+									autocomplete="off"
+								/>
+								<div id="station-config-suggestions" class="suggestions-dropdown" style="display: none;"></div>
+							</div>
+						</div>
+
+						<div class="station-config-section">
+							<h4>Your Stations</h4>
+							<div id="configured-stations-list" class="configured-stations">
+								<!-- Configured stations will appear here -->
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button id="save-station-config" class="btn btn-primary" type="button">Save Configuration</button>
+					</div>
+				</div>
+			</div>
+
+			<!-- Station Line Filter Modal -->
+			<div id="station-line-filter-modal" class="modal" style="display: none;">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h3 id="line-filter-station-name">Filter Lines</h3>
+						<button id="close-line-filter-modal" class="close-btn" type="button">&times;</button>
+					</div>
+					<div class="modal-body">
+						<p class="modal-description">Select which lines to show arrivals for:</p>
+						<div class="line-checkboxes" id="station-line-checkboxes">
+							<!-- Line checkboxes will be populated by JavaScript -->
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button id="select-all-station-lines" class="btn btn-secondary" type="button">Select All</button>
+						<button id="deselect-all-station-lines" class="btn btn-secondary" type="button">Deselect All</button>
+						<button id="save-station-line-filter" class="btn btn-primary" type="button">Save Filter</button>
+					</div>
+				</div>
+			</div>
+
+			<!-- Refresh Info -->
+			<div class="refresh-info" id="refresh-info">
+				Loading...
+			</div>
+		</div>
+
+		<script src="/station-config.js?v=3"></script>
+		<script src="/scripts.js?v=3"></script>
 	</body>
 </html>
