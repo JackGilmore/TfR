@@ -601,7 +601,7 @@ async function init() {
 
   // Load saved preferences or use defaults
   const savedLines = getSelectedLinesFromStorage();
-  selectedLines = savedLines.length > 0 ? savedLines : allLines.map(line => line.id);
+  selectedLines = savedLines.length > 0 ? savedLines : ['jubilee', 'windrush'];
 
   const savedStations = getConfiguredStationsFromStorage();
   configuredStations = savedStations;
