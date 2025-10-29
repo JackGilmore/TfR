@@ -126,11 +126,16 @@ h1 {
   border: 2px solid var(--border-color);
   border-radius: 6px;
   padding: 15px;
-  transition: box-shadow 0.2s;
+  transition: box-shadow 0.2s, transform 0.2s;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  cursor: pointer;
 }
 
 .line-status-card:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
 }
 
 .line-header {

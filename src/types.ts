@@ -42,6 +42,7 @@ export interface Arrival {
 export interface SimpleLineStatus {
   id: string;
   name: string;
+  modeName: string;
   status: string;
   statusSeverity: number;
   reason?: string;

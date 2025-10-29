@@ -23,6 +23,7 @@ export function parseLineStatuses(
     return {
       id: line.id,
       name: line.name,
+      modeName: line.modeName,
       status: status.statusSeverityDescription,
       statusSeverity: status.statusSeverity,
       reason: status.reason || status.disruption?.description,

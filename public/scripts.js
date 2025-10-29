@@ -140,6 +140,31 @@ async function fetchLineStatus() {
 }
 
 /**
+ * Generates TfL URL for a line based on its mode
+ * @param {object} line - Line object with id and modeName
+ * @returns {string} TfL URL for the line
+ */
+function getTfLLineUrl(line) {
+  const modeName = line.modeName ? line.modeName.toLowerCase() : 'tube';
+  
+  // Map mode names to URL segments
+  if (modeName === 'overground') {
+    return `https://tfl.gov.uk/overground/route/${line.id}/`;
+  } else if (modeName === 'tube') {
+    return `https://tfl.gov.uk/tube/route/${line.id}/`;
+  } else if (modeName === 'elizabeth-line') {
+    return `https://tfl.gov.uk/modes/elizabeth-line/`;
+  } else if (modeName === 'dlr') {
+    return `https://tfl.gov.uk/modes/dlr/`;
+  } else if (modeName === 'tram') {
+    return `https://tfl.gov.uk/modes/trams/`;
+  } else {
+    // Default to tube format
+    return `https://tfl.gov.uk/tube/route/${line.id}/`;
+  }
+}
+
+/**
  * Displays line status in the UI
  */
 function displayLineStatus(lines) {
@@ -154,8 +179,11 @@ function displayLineStatus(lines) {
   grid.className = 'line-status-grid';
 
   for (const line of lines) {
-    const card = document.createElement('div');
+    const card = document.createElement('a');
     card.className = 'line-status-card';
+    card.href = getTfLLineUrl(line);
+    card.target = '_blank';
+    card.rel = 'noopener noreferrer';
 
     const severity = getStatusClass(line.statusSeverity);
 
