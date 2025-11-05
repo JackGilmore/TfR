@@ -154,39 +154,65 @@ export async function getStationArrivals(
 ): Promise<Arrival[]> {
   console.log(`[TfL API] Fetching arrivals for station: ${stopPointId}`);
 
+  // First, get station info to check if this is a hub with child stations
+  let stationIds: string[] = [stopPointId];
+
   try {
-    // Try real-time arrivals first
-    const url = `${TFL_API_BASE}/StopPoint/${stopPointId}/Arrivals`;
-    console.log(`[TfL API] Calling arrivals endpoint: ${url}`);
+    const stationInfo = await getStationInfo(stopPointId);
 
-    const arrivalsResponse = await fetch(url, {
-      headers: {
-        'Accept': 'application/json',
-      },
-    });
-
-    console.log(`[TfL API] Arrivals response status: ${arrivalsResponse.status}`);
-
-    if (arrivalsResponse.ok) {
-      const arrivals: Arrival[] = await arrivalsResponse.json();
-      console.log(`[TfL API] Received ${arrivals.length} arrivals from real-time API`);
-
-      if (arrivals && arrivals.length > 0) {
-        console.log(`[TfL API] Returning ${arrivals.length} real-time arrivals`);
-        return arrivals;
-      } else {
-        console.log(`[TfL API] No real-time arrivals available, falling back to timetable`);
-      }
-    } else {
-      console.warn(`[TfL API] Arrivals API returned error status: ${arrivalsResponse.status}`);
+    // If this is a hub with children, get arrivals from all children (except bus)
+    if (stationInfo.children && Array.isArray(stationInfo.children) && stationInfo.children.length > 0) {
+      console.log(`[TfL API] Station is a hub with ${stationInfo.children.length} children`);
+      stationIds = stationInfo.children
+        .filter((child: any) => {
+          const modes = child.modes || [];
+          // Include tube, overground, dlr, tram, elizabeth-line - exclude bus
+          return modes.some((mode: string) => ['tube', 'overground', 'dlr', 'tram', 'elizabeth-line'].includes(mode));
+        })
+        .map((child: any) => child.id);
+      console.log(`[TfL API] Using child station IDs for arrivals:`, stationIds);
     }
   } catch (error) {
-    console.error('[TfL API] Arrivals API failed, falling back to timetable:', error);
+    console.warn(`[TfL API] Failed to get station info, using original ID: ${stopPointId}`, error);
   }
 
-  // Fallback to timetable
-  console.log(`[TfL API] Fetching timetable data for station: ${stopPointId}`);
-  return getStationTimetable(stopPointId);
+  // Fetch arrivals from all station IDs
+  const allArrivals: Arrival[] = [];
+
+  for (const stationId of stationIds) {
+    try {
+      // Try real-time arrivals with the station ID
+      const url = `${TFL_API_BASE}/StopPoint/${stationId}/Arrivals`;
+      console.log(`[TfL API] Calling arrivals endpoint: ${url}`);
+
+      const arrivalsResponse = await fetch(url, {
+        headers: {
+          'Accept': 'application/json',
+        },
+      });
+
+      console.log(`[TfL API] Arrivals response status for ${stationId}: ${arrivalsResponse.status}`);
+
+      if (arrivalsResponse.ok) {
+        const arrivals: Arrival[] = await arrivalsResponse.json();
+        console.log(`[TfL API] Received ${arrivals.length} arrivals from ${stationId}`);
+        allArrivals.push(...arrivals);
+      } else {
+        console.warn(`[TfL API] Arrivals API returned error status for ${stationId}: ${arrivalsResponse.status}`);
+      }
+    } catch (error) {
+      console.error(`[TfL API] Arrivals API failed for ${stationId}:`, error);
+    }
+  }
+
+  if (allArrivals.length > 0) {
+    console.log(`[TfL API] Returning ${allArrivals.length} total real-time arrivals`);
+    return allArrivals;
+  }
+
+  console.log(`[TfL API] No real-time arrivals available, falling back to timetable`);
+  // Fallback to timetable for the first station ID
+  return getStationTimetable(stationIds[0] || stopPointId);
 }
 
 /**
@@ -356,7 +382,7 @@ function parseTimetableToArrivals(
 /**
  * Fetches information about a specific station including which lines serve it.
  * @param stopPointId - The station stop point ID
- * @returns Station information including lines
+ * @returns Station information including lines and arrival stop point ID
  */
 export async function getStationInfo(stopPointId: string): Promise<any> {
   const url = `${TFL_API_BASE}/StopPoint/${stopPointId}`;
@@ -375,12 +401,23 @@ export async function getStationInfo(stopPointId: string): Promise<any> {
   }
 
   const data: any = await response.json();
+
+  // For arrivals, we should use the stop point ID as-is
+  // The stationAtcoCode in lineGroup is the same as the stop point ID for tube stations
+  const arrivalStopPointId = stopPointId;
+
   console.log(`[TfL API] Station info for ${data.commonName || data.name}:`, {
     id: data.id,
     name: data.commonName || data.name,
+    arrivalStopPointId: arrivalStopPointId,
+    hubNaptanCode: data.hubNaptanCode,
+    stationNaptan: data.stationNaptan,
     lineCount: data.lines?.length || 0,
     lines: data.lines?.map((l: any) => l.name) || []
   });
+
+  // Add the arrivalStopPointId to the data object
+  data.arrivalStopPointId = arrivalStopPointId;
 
   return data;
 }
