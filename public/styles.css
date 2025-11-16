@@ -3,6 +3,14 @@
  * Inspired by Transport for London's design
  */
 
+@font-face {
+  font-family: 'Johnston';
+  src: url('./p22-johnston-underground-regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --tfl-blue: #0019a8;
   --tfl-red: #dc241f;
@@ -22,7 +30,7 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Johnston', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   line-height: 1.6;
   color: var(--text-primary);
   background-color: #fff;
@@ -38,12 +46,12 @@ header {
   background-color: var(--tfl-blue);
   color: white;
   padding: 20px 30px;
-  margin: -20px -20px 30px -20px;
+  margin: -20px -20px 10px -20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
-  font-size: 2rem;
+  font-size: 1.75rem;
   font-weight: 700;
   margin: 0;
 }
@@ -117,8 +125,9 @@ h1 {
 /* Line Status Styles */
 .line-status-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 15px;
+  width: 100%;
 }
 
 .line-status-card {
@@ -129,7 +138,8 @@ h1 {
   transition: box-shadow 0.2s, transform 0.2s;
   text-decoration: none;
   color: inherit;
-  display: block;
+  display: flex;
+  flex-direction: column;
   cursor: pointer;
 }
 
@@ -140,12 +150,13 @@ h1 {
 
 .line-header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  justify-content: space-between;
   margin-bottom: 10px;
 }
 
 .line-name {
-  font-size: 1.1rem;
+  font-size: 1.3rem;
   font-weight: 700;
   text-transform: capitalize;
 }
@@ -154,10 +165,10 @@ h1 {
   display: inline-block;
   padding: 4px 12px;
   border-radius: 12px;
-  font-size: 0.85rem;
+  font-size: 1rem;
   font-weight: 600;
   color: white;
-  margin-top: 5px;
+  flex-shrink: 0;
 }
 
 .status-good {
@@ -177,7 +188,7 @@ h1 {
   padding: 10px;
   background-color: var(--bg-light);
   border-radius: 4px;
-  font-size: 0.9rem;
+  font-size: 1rem;
   color: var(--text-secondary);
 }
 
@@ -322,17 +333,17 @@ h1 {
 
 .arrival-destination {
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 1.1rem;
   margin-bottom: 3px;
 }
 
 .arrival-platform {
-  font-size: 0.85rem;
+  font-size: 0.95rem;
   color: var(--text-secondary);
 }
 
 .arrival-time {
-  font-size: 1.1rem;
+  font-size: 1.3rem;
   font-weight: 700;
   color: var(--tfl-blue);
   white-space: nowrap;
@@ -424,12 +435,41 @@ h1 {
 }
 
 /* Station Arrivals Card Styles */
+.arrivals-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+@media (min-width: 1024px) {
+  .arrivals-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 .station-arrivals-card {
   background: white;
   border: 2px solid var(--border-color);
   border-radius: 8px;
   padding: 20px;
-  margin-bottom: 20px;
+  margin-bottom: 0;
+}
+
+.station-arrivals-lines-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 15px;
+}
+
+@media (min-width: 768px) {
+  .station-arrivals-lines-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* If only one line, make it full width */
+  .station-arrivals-lines-container:has(.line-arrivals-compact:only-child) {
+    grid-template-columns: 1fr;
+  }
 }
 
 .station-card-header {
@@ -442,7 +482,7 @@ h1 {
 }
 
 .station-card-name {
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   font-weight: 700;
   color: var(--text-primary);
   margin: 0;
@@ -457,7 +497,7 @@ h1 {
 }
 
 .line-arrivals-header-compact {
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: 700;
   text-transform: capitalize;
   margin-bottom: 10px;
@@ -615,16 +655,6 @@ h1 {
   transform: translateY(1px);
 }
 
-/* Refresh Info */
-.refresh-info {
-  text-align: right;
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-  margin-top: 30px;
-  padding-top: 15px;
-  border-top: 1px solid var(--border-color);
-}
-
 /* Responsive Design */
 @media (max-width: 768px) {
   body {
@@ -632,7 +662,7 @@ h1 {
   }
 
   header {
-    margin: -10px -10px 20px -10px;
+    margin: -10px -10px 10px -10px;
     padding: 15px 20px;
   }
 

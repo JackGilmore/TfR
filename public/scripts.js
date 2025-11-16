@@ -146,7 +146,7 @@ async function fetchLineStatus() {
  */
 function getTfLLineUrl(line) {
   const modeName = line.modeName ? line.modeName.toLowerCase() : 'tube';
-  
+
   // Map mode names to URL segments
   if (modeName === 'overground') {
     return `https://tfl.gov.uk/overground/route/${line.id}/`;
@@ -190,8 +190,8 @@ function displayLineStatus(lines) {
     card.innerHTML = `
       <div class="line-header">
         <div class="line-name">${line.name}</div>
+        <div class="status-badge status-${severity}">${line.status}</div>
       </div>
-      <div class="status-badge status-${severity}">${line.status}</div>
       ${line.reason ? `<div class="status-reason">${line.reason}</div>` : ''}
     `;
 
@@ -249,7 +249,7 @@ async function fetchAllStationArrivals() {
     }
   }
 
-  container.innerHTML = arrivalsHtml.join('');
+  container.innerHTML = `<div class="arrivals-grid">${arrivalsHtml.join('')}</div>`;
 }
 
 /**
@@ -274,6 +274,7 @@ function renderStationArrivals(stationConfig, data) {
         <h3 class="station-card-name">${data.stationName || stationConfig.name}</h3>
         <button class="btn-icon" onclick="openLineFilter('${stationConfig.id}')" title="Filter lines">⚙️</button>
       </div>
+      <div class="station-arrivals-lines-container">
   `;
 
   // Filter lines based on station config
@@ -316,7 +317,7 @@ function renderStationArrivals(stationConfig, data) {
     `;
   }
 
-  html += '</div>';
+  html += '</div></div>';
   return html;
 }
 
@@ -488,23 +489,6 @@ function startAutoRefresh() {
 }
 
 /**
- * Updates the last refresh time display
- */
-function updateRefreshTime() {
-  const now = new Date();
-  const timeString = now.toLocaleTimeString('en-GB', {
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit'
-  });
-
-  const refreshInfo = document.getElementById('refresh-info');
-  if (refreshInfo) {
-    refreshInfo.textContent = `Last updated: ${timeString} • Auto-refreshing every 20 seconds`;
-  }
-}
-
-/**
  * Populates the line selector modal with checkboxes
  */
 function populateLineSelector() {
@@ -643,10 +627,6 @@ async function init() {
   fetchAllStationArrivals();
 
   startAutoRefresh();
-
-  // Update refresh time every second
-  setInterval(updateRefreshTime, 1000);
-  updateRefreshTime();
 
   // Refresh line status every 30 seconds
   setInterval(fetchLineStatus, 30000);
