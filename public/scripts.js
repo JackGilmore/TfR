@@ -181,6 +181,7 @@ function displayLineStatus(lines) {
   for (const line of lines) {
     const card = document.createElement('a');
     card.className = 'line-status-card';
+    card.setAttribute('data-line', line.id);
     card.href = getTfLLineUrl(line);
     card.target = '_blank';
     card.rel = 'noopener noreferrer';

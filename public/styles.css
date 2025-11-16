@@ -21,6 +21,24 @@
   --bg-light: #f5f5f5;
   --text-primary: #1c1c1c;
   --text-secondary: #666;
+
+  /* TfL Line Brand Colors */
+  --line-bakerloo: #B36305;
+  --line-central: #E32017;
+  --line-circle: #FFD300;
+  --line-district: #00782A;
+  --line-elizabeth: #6950a1;
+  --line-hammersmith-city: #F3A9BB;
+  --line-jubilee: #A0A5A9;
+  --line-metropolitan: #9B0056;
+  --line-northern: #000000;
+  --line-piccadilly: #003688;
+  --line-victoria: #0098D4;
+  --line-waterloo-city: #95CDBA;
+  --line-dlr: #00A4A7;
+  --line-london-overground: #EE7C0E;
+  --line-trams: #84B817;
+  --line-cable-car: #E21836;
 }
 
 * {
@@ -141,6 +159,7 @@ h1 {
 .line-status-card {
   background: white;
   border: 2px solid var(--border-color);
+  border-left: 5px solid var(--border-color);
   border-radius: 6px;
   padding: 15px;
   transition: box-shadow 0.2s, transform 0.2s;
@@ -154,6 +173,77 @@ h1 {
 .line-status-card:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transform: translateY(-2px);
+}
+
+/* Line-specific border colors */
+.line-status-card[data-line="bakerloo"] {
+  border-left-color: var(--line-bakerloo);
+}
+
+.line-status-card[data-line="central"] {
+  border-left-color: var(--line-central);
+}
+
+.line-status-card[data-line="circle"] {
+  border-left-color: var(--line-circle);
+}
+
+.line-status-card[data-line="district"] {
+  border-left-color: var(--line-district);
+}
+
+.line-status-card[data-line="elizabeth"] {
+  border-left-color: var(--line-elizabeth);
+}
+
+.line-status-card[data-line="hammersmith-city"] {
+  border-left-color: var(--line-hammersmith-city);
+}
+
+.line-status-card[data-line="jubilee"] {
+  border-left-color: var(--line-jubilee);
+}
+
+.line-status-card[data-line="metropolitan"] {
+  border-left-color: var(--line-metropolitan);
+}
+
+.line-status-card[data-line="northern"] {
+  border-left-color: var(--line-northern);
+}
+
+.line-status-card[data-line="piccadilly"] {
+  border-left-color: var(--line-piccadilly);
+}
+
+.line-status-card[data-line="victoria"] {
+  border-left-color: var(--line-victoria);
+}
+
+.line-status-card[data-line="waterloo-city"] {
+  border-left-color: var(--line-waterloo-city);
+}
+
+.line-status-card[data-line="dlr"] {
+  border-left-color: var(--line-dlr);
+}
+
+.line-status-card[data-line="london-overground"],
+.line-status-card[data-line="windrush"],
+.line-status-card[data-line="liberty"],
+.line-status-card[data-line="lioness"],
+.line-status-card[data-line="mildmay"],
+.line-status-card[data-line="suffragette"],
+.line-status-card[data-line="weaver"] {
+  border-left-color: var(--line-london-overground);
+}
+
+.line-status-card[data-line="tram"] {
+  border-left-color: var(--line-trams);
+}
+
+.line-status-card[data-line="cable-car"] {
+  border-left-color: var(--line-cable-car);
 }
 
 .line-header {
