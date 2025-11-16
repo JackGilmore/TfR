@@ -43,11 +43,19 @@ body {
 }
 
 header {
-  background-color: var(--tfl-blue);
+  background-color: #2d3039;
   color: white;
   padding: 20px 30px;
   margin: -20px -20px 10px -20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.header-logo {
+  height: 50px;
+  width: auto;
 }
 
 h1 {
