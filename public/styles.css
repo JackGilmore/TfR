@@ -80,6 +80,40 @@ h1 {
   font-size: 1.75rem;
   font-weight: 700;
   margin: 0;
+  flex: 1;
+}
+
+.compact-toggle {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.compact-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.compact-toggle:active {
+  transform: translateY(1px);
+}
+
+body.compact-mode .compact-toggle {
+  background-color: var(--tfl-blue);
+  border-color: white;
+}
+
+.toggle-icon {
+  display: inline-block;
+  transition: transform 0.2s;
 }
 
 .subtitle {
@@ -110,6 +144,15 @@ h1 {
 .section-header .section-title {
   margin-bottom: 0;
   flex: 1;
+}
+
+/* Compact mode: hide section headers */
+body.compact-mode .section-header {
+  display: none;
+}
+
+body.compact-mode .section {
+  margin-bottom: 20px;
 }
 
 .configure-btn {

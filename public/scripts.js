@@ -4,6 +4,7 @@
 
 const STORAGE_KEY_LINES = 'tfr-selected-lines';
 const STORAGE_KEY_STATIONS = 'tfr-configured-stations';
+const STORAGE_KEY_COMPACT_MODE = 'tfr-compact-mode';
 
 let allLines = [];
 let allStations = [];
@@ -13,6 +14,7 @@ let refreshInterval = null;
 let isInitialized = false;
 let selectedSuggestionIndex = -1;
 let currentStationForLineFilter = null;
+let compactMode = false;
 
 /**
  * Fetches all available lines from the API
@@ -483,10 +485,11 @@ function startAutoRefresh() {
     clearInterval(refreshInterval);
   }
 
-  // Refresh arrivals every 20 seconds
+  // Refresh arrivals every 60 seconds
   refreshInterval = setInterval(() => {
     fetchAllStationArrivals();
-  }, 20000);
+    fetchLineStatus();
+  }, 60000);
 }
 
 /**
@@ -599,6 +602,68 @@ function setupLineSelector() {
 }
 
 /**
+ * Gets compact mode preference from local storage or query parameter
+ */
+function getCompactModeFromStorage() {
+  // Check for query parameter first
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.has('compact')) {
+    const compactParam = urlParams.get('compact');
+    return compactParam === 'true' || compactParam === '1';
+  }
+
+  // Fall back to localStorage
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY_COMPACT_MODE);
+    return stored === 'true';
+  } catch (error) {
+    console.error('Error reading compact mode from local storage:', error);
+    return false;
+  }
+}
+
+/**
+ * Saves compact mode preference to local storage
+ */
+function saveCompactModeToStorage(isCompact) {
+  try {
+    localStorage.setItem(STORAGE_KEY_COMPACT_MODE, isCompact.toString());
+  } catch (error) {
+    console.error('Error saving compact mode to local storage:', error);
+  }
+}
+
+/**
+ * Applies compact mode class to body
+ */
+function applyCompactMode() {
+  if (compactMode) {
+    document.body.classList.add('compact-mode');
+  } else {
+    document.body.classList.remove('compact-mode');
+  }
+}
+
+/**
+ * Toggles compact mode on and off
+ */
+function toggleCompactMode() {
+  compactMode = !compactMode;
+  saveCompactModeToStorage(compactMode);
+  applyCompactMode();
+}
+
+/**
+ * Sets up the compact mode toggle button
+ */
+function setupCompactModeToggle() {
+  const toggleBtn = document.getElementById('compact-mode-toggle');
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', toggleCompactMode);
+  }
+}
+
+/**
  * Initialize the dashboard
  */
 async function init() {
@@ -619,18 +684,20 @@ async function init() {
   const savedStations = getConfiguredStationsFromStorage();
   configuredStations = savedStations;
 
+  // Load compact mode preference
+  compactMode = getCompactModeFromStorage();
+  applyCompactMode();
+
   // Set up UI
   setupLineSelector();
   setupStationConfiguration();
+  setupCompactModeToggle();
 
   // Fetch initial data
   fetchLineStatus();
   fetchAllStationArrivals();
 
   startAutoRefresh();
-
-  // Refresh line status every 30 seconds
-  setInterval(fetchLineStatus, 30000);
 }
 
 // Start the app when DOM is ready
