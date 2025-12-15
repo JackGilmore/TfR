@@ -124,6 +124,21 @@
 						<div class="line-checkboxes" id="station-line-checkboxes">
 							<!-- Line checkboxes will be populated by JavaScript -->
 						</div>
+
+						<div class="delay-filter-section" style="margin-top: 1.5rem; border-top: 1px solid var(--border-color); padding-top: 1rem;">
+							<h4 style="margin-bottom: 0.5rem; font-size: 1rem;">Travel Time Filter</h4>
+							<p class="modal-description" style="margin-bottom: 0.75rem;">Only show arrivals that are at least X minutes away (e.g. to account for walking time).</p>
+							<div class="delay-filter-controls" style="display: flex; align-items: center; gap: 1rem;">
+								<label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+									<input type="checkbox" id="enable-delay-filter">
+									<span>Enable Filter</span>
+								</label>
+								<div id="delay-minutes-container" style="display: none; align-items: center; gap: 0.5rem;">
+									<input type="number" id="delay-minutes" min="1" max="120" value="15" style="width: 70px; padding: 0.4rem; border: 1px solid var(--border-color); border-radius: 4px;">
+									<span>minutes</span>
+								</div>
+							</div>
+						</div>
 					</div>
 					<div class="modal-footer">
 						<button id="select-all-station-lines" class="btn btn-secondary" type="button">Select All</button>

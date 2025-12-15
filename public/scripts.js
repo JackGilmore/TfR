@@ -290,14 +290,27 @@ function renderStationArrivals(stationConfig, data) {
     html += '<div class="no-arrivals">No arrivals for selected lines</div>';
   }
 
+  let hasVisibleArrivals = false;
+
   for (const [lineId, lineData] of sortedLines) {
+    let arrivals = lineData.arrivals;
+
+    // Filter arrivals based on delay filter
+    if (stationConfig.delayFilter && stationConfig.delayFilter.enabled) {
+      const minSeconds = (stationConfig.delayFilter.minutes || 0) * 60;
+      arrivals = arrivals.filter(a => a.timeToStation >= minSeconds);
+    }
+
+    if (arrivals.length === 0) continue;
+    hasVisibleArrivals = true;
+
     html += `
       <div class="line-arrivals-compact">
-        <div class="line-arrivals-header-compact">${lineData.lineName} Line</div>
+        <div class="line-arrivals-header-compact" data-line="${lineId}">${lineData.lineName} Line</div>
         <ul class="arrivals-list">
     `;
 
-    const arrivals = lineData.arrivals.slice(0, 3);
+    arrivals = arrivals.slice(0, 3);
 
     for (const arrival of arrivals) {
       const timeText = formatTimeToStation(arrival.timeToStation);
@@ -318,6 +331,10 @@ function renderStationArrivals(stationConfig, data) {
         </ul>
       </div>
     `;
+  }
+
+  if (!hasVisibleArrivals && sortedLines.length > 0) {
+    html += '<div class="no-arrivals">No arrivals matching filter</div>';
   }
 
   html += '</div></div>';

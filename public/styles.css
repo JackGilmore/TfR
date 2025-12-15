@@ -643,6 +643,79 @@ body.compact-mode .section {
   text-transform: capitalize;
   margin-bottom: 10px;
   color: var(--tfl-blue);
+  border-left: 5px solid var(--border-color);
+  padding-left: 10px;
+}
+
+/* Line-specific border colors for arrivals header */
+.line-arrivals-header-compact[data-line="bakerloo"] {
+  border-left-color: var(--line-bakerloo);
+}
+
+.line-arrivals-header-compact[data-line="central"] {
+  border-left-color: var(--line-central);
+}
+
+.line-arrivals-header-compact[data-line="circle"] {
+  border-left-color: var(--line-circle);
+}
+
+.line-arrivals-header-compact[data-line="district"] {
+  border-left-color: var(--line-district);
+}
+
+.line-arrivals-header-compact[data-line="elizabeth"] {
+  border-left-color: var(--line-elizabeth);
+}
+
+.line-arrivals-header-compact[data-line="hammersmith-city"] {
+  border-left-color: var(--line-hammersmith-city);
+}
+
+.line-arrivals-header-compact[data-line="jubilee"] {
+  border-left-color: var(--line-jubilee);
+}
+
+.line-arrivals-header-compact[data-line="metropolitan"] {
+  border-left-color: var(--line-metropolitan);
+}
+
+.line-arrivals-header-compact[data-line="northern"] {
+  border-left-color: var(--line-northern);
+}
+
+.line-arrivals-header-compact[data-line="piccadilly"] {
+  border-left-color: var(--line-piccadilly);
+}
+
+.line-arrivals-header-compact[data-line="victoria"] {
+  border-left-color: var(--line-victoria);
+}
+
+.line-arrivals-header-compact[data-line="waterloo-city"] {
+  border-left-color: var(--line-waterloo-city);
+}
+
+.line-arrivals-header-compact[data-line="dlr"] {
+  border-left-color: var(--line-dlr);
+}
+
+.line-arrivals-header-compact[data-line="london-overground"],
+.line-arrivals-header-compact[data-line="windrush"],
+.line-arrivals-header-compact[data-line="liberty"],
+.line-arrivals-header-compact[data-line="lioness"],
+.line-arrivals-header-compact[data-line="mildmay"],
+.line-arrivals-header-compact[data-line="suffragette"],
+.line-arrivals-header-compact[data-line="weaver"] {
+  border-left-color: var(--line-london-overground);
+}
+
+.line-arrivals-header-compact[data-line="tram"] {
+  border-left-color: var(--line-trams);
+}
+
+.line-arrivals-header-compact[data-line="cable-car"] {
+  border-left-color: var(--line-cable-car);
 }
 
 /* Modal Styles */

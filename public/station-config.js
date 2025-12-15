@@ -228,6 +228,22 @@ function openLineFilter(stationId) {
   document.getElementById('line-filter-station-name').textContent = `Filter Lines - ${station.name}`;
 
   populateStationLineCheckboxes(station);
+
+  // Populate delay filter
+  const enableDelayFilter = document.getElementById('enable-delay-filter');
+  const delayMinutes = document.getElementById('delay-minutes');
+  const delayContainer = document.getElementById('delay-minutes-container');
+
+  if (station.delayFilter && station.delayFilter.enabled) {
+    enableDelayFilter.checked = true;
+    delayMinutes.value = station.delayFilter.minutes || 15;
+    delayContainer.style.display = 'flex';
+  } else {
+    enableDelayFilter.checked = false;
+    delayMinutes.value = 15; // Default
+    delayContainer.style.display = 'none';
+  }
+
   document.getElementById('station-line-filter-modal').style.display = 'flex';
 }
 
@@ -322,6 +338,21 @@ function saveStationLineFilter() {
   // If all available lines are selected, store empty array (means show all)
   station.selectedLines = selectedLines.length === availableLineCount ? [] : selectedLines;
 
+  // Save delay filter
+  const enableDelayFilter = document.getElementById('enable-delay-filter');
+  const delayMinutes = document.getElementById('delay-minutes');
+
+  if (enableDelayFilter.checked) {
+    station.delayFilter = {
+      enabled: true,
+      minutes: parseInt(delayMinutes.value, 10) || 15
+    };
+  } else {
+    if (station.delayFilter) {
+      station.delayFilter.enabled = false;
+    }
+  }
+
   saveConfiguredStationsToStorage(configuredStations);
   closeLineFilter();
   renderConfiguredStations();
@@ -340,6 +371,14 @@ function setupStationConfiguration() {
   document.getElementById('save-station-line-filter').addEventListener('click', saveStationLineFilter);
   document.getElementById('select-all-station-lines').addEventListener('click', selectAllStationLines);
   document.getElementById('deselect-all-station-lines').addEventListener('click', deselectAllStationLines);
+
+  // Delay filter toggle
+  const enableDelayFilter = document.getElementById('enable-delay-filter');
+  if (enableDelayFilter) {
+    enableDelayFilter.addEventListener('change', (e) => {
+      document.getElementById('delay-minutes-container').style.display = e.target.checked ? 'flex' : 'none';
+    });
+  }
 
   setupStationConfigSearch();
 
