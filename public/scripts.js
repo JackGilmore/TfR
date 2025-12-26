@@ -241,10 +241,22 @@ async function fetchAllStationArrivals() {
       arrivalsHtml.push(html);
     } catch (error) {
       console.error(`Error fetching arrivals for ${stationConfig.name}:`, error);
+      
+      let travelTimeIndicator = '';
+      if (stationConfig.delayFilter && stationConfig.delayFilter.enabled) {
+        const minutes = stationConfig.delayFilter.minutes || 0;
+        if (minutes > 0) {
+          travelTimeIndicator = `<span class="travel-time-indicator" title="Travel time added: ${minutes} mins">👣 +${minutes} min</span>`;
+        }
+      }
+
       arrivalsHtml.push(`
         <div class="station-arrivals-card">
           <div class="station-card-header">
-            <h3 class="station-card-name">${stationConfig.name}</h3>
+            <div class="station-header-content">
+              <h3 class="station-card-name">${stationConfig.name}</h3>
+              ${travelTimeIndicator}
+            </div>
           </div>
           <div class="error">Failed to load arrivals</div>
         </div>
@@ -259,11 +271,22 @@ async function fetchAllStationArrivals() {
  * Renders arrivals for a single station
  */
 function renderStationArrivals(stationConfig, data) {
+  let travelTimeIndicator = '';
+  if (stationConfig.delayFilter && stationConfig.delayFilter.enabled) {
+    const minutes = stationConfig.delayFilter.minutes || 0;
+    if (minutes > 0) {
+      travelTimeIndicator = `<span class="travel-time-indicator" title="Travel time added: ${minutes} mins">👣 +${minutes} min</span>`;
+    }
+  }
+
   if (!data.lines || Object.keys(data.lines).length === 0) {
     return `
       <div class="station-arrivals-card">
         <div class="station-card-header">
-          <h3 class="station-card-name">${stationConfig.name}</h3>
+          <div class="station-header-content">
+            <h3 class="station-card-name">${stationConfig.name}</h3>
+            ${travelTimeIndicator}
+          </div>
           <button class="btn-icon" onclick="openLineFilter('${stationConfig.id}')" title="Filter lines">⚙️</button>
         </div>
         <div class="no-arrivals">No arrivals available</div>
@@ -274,7 +297,10 @@ function renderStationArrivals(stationConfig, data) {
   let html = `
     <div class="station-arrivals-card">
       <div class="station-card-header">
-        <h3 class="station-card-name">${data.stationName || stationConfig.name}</h3>
+        <div class="station-header-content">
+          <h3 class="station-card-name">${data.stationName || stationConfig.name}</h3>
+          ${travelTimeIndicator}
+        </div>
         <button class="btn-icon" onclick="openLineFilter('${stationConfig.id}')" title="Filter lines">⚙️</button>
       </div>
       <div class="station-arrivals-lines-container">

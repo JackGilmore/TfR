@@ -622,6 +622,25 @@ body.compact-mode .section {
   border-bottom: 2px solid var(--border-color);
 }
 
+.station-header-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.travel-time-indicator {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  background-color: var(--bg-light);
+  padding: 2px 8px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border: 1px solid var(--border-color);
+}
+
 .station-card-name {
   font-size: 1.6rem;
   font-weight: 700;
