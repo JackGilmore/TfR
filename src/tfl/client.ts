@@ -2,7 +2,7 @@
  * TfL API client for fetching transport data
  */
 
-import type { LineStatus, Arrival } from '../types';
+import type { LineStatus, Arrival, StationDisruption } from '../types';
 
 const TFL_API_BASE = 'https://api.tfl.gov.uk';
 
@@ -377,6 +377,35 @@ function parseTimetableToArrivals(
 
   console.log(`[TfL Parser] Total arrivals parsed for ${lineName}: ${arrivals.length}`);
   return arrivals;
+}
+
+/**
+ * Fetches disruption data for a specific station.
+ * @param stopPointId - The station stop point ID (e.g. '940GZZLUEUS')
+ * @returns An array of disruption objects for the station.
+ */
+export async function getStationDisruptions(
+  stopPointId: string
+): Promise<StationDisruption[]> {
+  const url = `${TFL_API_BASE}/StopPoint/${stopPointId}/Disruption`;
+  console.log(`[TfL API] Fetching disruptions for station: ${stopPointId} — ${url}`);
+
+  const response = await fetch(url, {
+    headers: {
+      'Accept': 'application/json',
+    },
+  });
+
+  console.log(`[TfL API] Disruptions response status for ${stopPointId}: ${response.status}`);
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch disruptions for ${stopPointId}: ${response.status}`);
+  }
+
+  const data: StationDisruption[] = await response.json();
+  console.log(`[TfL API] Disruptions for ${stopPointId} (${data.length} items):`, JSON.stringify(data, null, 2));
+
+  return data;
 }
 
 /**

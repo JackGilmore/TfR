@@ -70,3 +70,20 @@ export interface StationArrivals {
     };
   };
 }
+
+/**
+ * TfL API StopPoint disruption structure
+ */
+export interface StationDisruption {
+  category: string;
+  type: string;
+  categoryDescription: string;
+  description: string;
+  summary?: string;
+  additionalInfo?: string;
+  created?: string;
+  lastUpdate?: string;
+  affectedRoutes?: unknown[];
+  affectedStops?: unknown[];
+  closureText?: string;
+}

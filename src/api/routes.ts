@@ -2,7 +2,7 @@
  * API route handlers
  */
 
-import { getLineStatus, getAllTubeStatus, getStationArrivals, getAllLines, searchStations, getPopularStations, getStationInfo } from '../tfl/client';
+import { getLineStatus, getAllTubeStatus, getStationArrivals, getAllLines, searchStations, getPopularStations, getStationInfo, getStationDisruptions } from '../tfl/client';
 import { parseLineStatuses, parseStationArrivals } from '../tfl/parser';
 import { jsonResponse, errorResponse } from '../utils/cors';
 import { addCacheHeaders } from '../utils/cache';
@@ -185,6 +185,34 @@ export async function handleStationInfo(
     console.error('Error fetching station info:', error);
     return errorResponse(
       error instanceof Error ? error.message : 'Failed to fetch station info',
+      500
+    );
+  }
+}
+
+/**
+ * Handles requests for station disruption data.
+ * GET /api/disruptions/{stopPointId} - Get disruptions at a station
+ */
+export async function handleStationDisruptions(
+  stopPointId: string
+): Promise<Response> {
+  console.log(`[API Route] Handling disruptions request for station: ${stopPointId}`);
+
+  try {
+    if (!stopPointId) {
+      return errorResponse('Stop point ID is required', 400);
+    }
+
+    const disruptions = await getStationDisruptions(stopPointId);
+    console.log(`[API Route] Received ${disruptions.length} disruptions for ${stopPointId}`);
+
+    const response = jsonResponse(disruptions);
+    return addCacheHeaders(response, 60); // Cache for 60 seconds
+  } catch (error) {
+    console.error('[API Route] Error fetching disruptions:', error);
+    return errorResponse(
+      error instanceof Error ? error.message : 'Failed to fetch disruptions',
       500
     );
   }

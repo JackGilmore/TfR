@@ -943,3 +943,127 @@ body.compact-mode .section {
     width: 100%;
   }
 }
+
+/* =====================
+   Disruption Debug Panel
+   ===================== */
+
+.debug-section {
+  border-top: 3px solid var(--tfl-blue);
+  margin-top: 2rem;
+}
+
+.debug-summary {
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0.5rem 0;
+  user-select: none;
+  color: var(--tfl-blue);
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.debug-summary::before {
+  content: '▶';
+  font-size: 0.75rem;
+  transition: transform 0.2s;
+}
+
+details[open] > .debug-summary::before {
+  transform: rotate(90deg);
+}
+
+.debug-station-block {
+  background: var(--bg-light);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.debug-station-name {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.debug-station-id {
+  font-size: 0.8rem;
+  font-weight: normal;
+  color: var(--text-secondary);
+}
+
+.debug-subheading {
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--text-secondary);
+}
+
+.debug-none,
+.debug-error {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+.debug-error {
+  color: var(--tfl-severe-delays);
+}
+
+.debug-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  margin-bottom: 0.75rem;
+  overflow-x: auto;
+  display: block;
+}
+
+.debug-table th,
+.debug-table td {
+  border: 1px solid var(--border-color);
+  padding: 0.4rem 0.6rem;
+  text-align: left;
+  vertical-align: top;
+  white-space: normal;
+  word-break: break-word;
+}
+
+.debug-table th {
+  background-color: var(--tfl-blue);
+  color: #fff;
+  font-weight: 700;
+}
+
+.debug-table tr:nth-child(even) td {
+  background-color: #f9f9f9;
+}
+
+.debug-raw-details {
+  margin-top: 0.5rem;
+}
+
+.debug-raw-details > summary {
+  font-size: 0.85rem;
+  cursor: pointer;
+  color: var(--text-secondary);
+  user-select: none;
+}
+
+.debug-raw {
+  background: #1c1c1c;
+  color: #e8e8e8;
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  font-size: 0.78rem;
+  overflow-x: auto;
+  white-space: pre;
+  margin-top: 0.5rem;
+  max-height: 400px;
+  overflow-y: auto;
+}
