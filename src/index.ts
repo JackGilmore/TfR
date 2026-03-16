@@ -3,7 +3,7 @@
  * Main entry point for the TfR API and static site
  */
 
-import { handleLineStatus, handleStationArrivals, handleGetLines, handleGetStations, handleStationInfo } from './api/routes';
+import { handleLineStatus, handleStationArrivals, handleGetLines, handleGetStations, handleStationInfo, handleStationDisruptions } from './api/routes';
 import { corsPreflightResponse } from './utils/cors';
 
 export default {
@@ -44,6 +44,13 @@ export default {
 			if (arrivalsMatch) {
 				const stopPointId = arrivalsMatch[1];
 				return handleStationArrivals(stopPointId);
+			}
+
+			// GET /api/disruptions/{stopPointId} - Station disruptions endpoint
+			const disruptionsMatch = url.pathname.match(/^\/api\/disruptions\/([^/]+)$/);
+			if (disruptionsMatch) {
+				const stopPointId = disruptionsMatch[1];
+				return handleStationDisruptions(stopPointId);
 			}
 
 			// API route not found

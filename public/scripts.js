@@ -265,6 +265,9 @@ async function fetchAllStationArrivals() {
   }
 
   container.innerHTML = `<div class="arrivals-grid">${arrivalsHtml.join('')}</div>`;
+
+  // Also fetch and display disruption debug data for all configured stations
+  fetchAllStationDisruptions();
 }
 
 /**
@@ -704,6 +707,118 @@ function setupCompactModeToggle() {
   if (toggleBtn) {
     toggleBtn.addEventListener('click', toggleCompactMode);
   }
+}
+
+/**
+ * Fetches disruption data for a single station and logs it to the console.
+ * @param {string} stationId - The stop point ID of the station
+ * @param {string} stationName - Human-readable station name for logging
+ * @returns {Promise<Array>} The disruption array, or an empty array on error
+ */
+async function fetchStationDisruptions(stationId, stationName) {
+  try {
+    console.log(`[Disruptions] Fetching disruptions for ${stationName} (${stationId})`);
+    const response = await fetch(`/api/disruptions/${stationId}`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const disruptions = await response.json();
+    console.log(`[Disruptions] ${stationName} (${stationId}) — ${disruptions.length} disruption(s):`, disruptions);
+    return disruptions;
+  } catch (error) {
+    console.error(`[Disruptions] Error fetching disruptions for ${stationName} (${stationId}):`, error);
+    return [];
+  }
+}
+
+/**
+ * Fetches disruptions for all configured stations and renders the debug panel.
+ */
+async function fetchAllStationDisruptions() {
+  const debugContent = document.getElementById('disruption-debug-content');
+
+  if (configuredStations.length === 0) {
+    debugContent.innerHTML = '<div class="no-arrivals">No stations configured.</div>';
+    return;
+  }
+
+  debugContent.innerHTML = '<div class="loading">Loading disruption data...</div>';
+
+  const results = [];
+
+  for (const stationConfig of configuredStations) {
+    const disruptions = await fetchStationDisruptions(stationConfig.id, stationConfig.name);
+    results.push({ station: stationConfig, disruptions });
+  }
+
+  renderDisruptionDebugPanel(results);
+}
+
+/**
+ * Renders the disruption debug panel with raw and organised data per station.
+ * @param {Array} results - Array of { station, disruptions } objects
+ */
+function renderDisruptionDebugPanel(results) {
+  const debugContent = document.getElementById('disruption-debug-content');
+
+  if (!results || results.length === 0) {
+    debugContent.innerHTML = '<div class="no-arrivals">No disruption data available.</div>';
+    return;
+  }
+
+  let html = '';
+
+  for (const { station, disruptions } of results) {
+    const count = disruptions.length;
+
+    html += `<div class="debug-station-block">`;
+    html += `<h3 class="debug-station-name">${escapeHtml(station.name)} <span class="debug-station-id">(${escapeHtml(station.id)})</span></h3>`;
+
+    if (count === 0) {
+      html += `<p class="debug-none">No disruptions reported.</p>`;
+    } else {
+      // Organised view
+      html += `<div class="debug-organised">`;
+      html += `<h4 class="debug-subheading">Organised (${count} disruption${count !== 1 ? 's' : ''})</h4>`;
+      html += `<table class="debug-table">`;
+      html += `<thead><tr><th>Category</th><th>Type</th><th>Description</th><th>Summary</th><th>Last Updated</th></tr></thead>`;
+      html += `<tbody>`;
+      for (const d of disruptions) {
+        html += `<tr>
+          <td>${escapeHtml(d.categoryDescription || d.category || '—')}</td>
+          <td>${escapeHtml(d.type || '—')}</td>
+          <td>${escapeHtml(d.description || '—')}</td>
+          <td>${escapeHtml(d.summary || '—')}</td>
+          <td>${escapeHtml(d.lastUpdate || d.created || '—')}</td>
+        </tr>`;
+      }
+      html += `</tbody></table></div>`;
+
+      // Raw JSON view
+      html += `<details class="debug-raw-details"><summary>Raw JSON</summary>`;
+      html += `<pre class="debug-raw">${escapeHtml(JSON.stringify(disruptions, null, 2))}</pre>`;
+      html += `</details>`;
+    }
+
+    html += `</div>`;
+  }
+
+  debugContent.innerHTML = html;
+}
+
+/**
+ * Escapes HTML special characters to prevent XSS in debug output.
+ * @param {string} str
+ * @returns {string}
+ */
+function escapeHtml(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
 
 /**
