@@ -2,9 +2,11 @@
  * TfL API client for fetching transport data
  */
 
+import { env } from "cloudflare:workers";
 import type { LineStatus, Arrival, StationDisruption } from '../types';
 
 const TFL_API_BASE = 'https://api.tfl.gov.uk';
+const TFL_API_KEY = env.TFL_API_KEY;
 
 /**
  * Fetches the current status of specific tube lines.
@@ -16,6 +18,7 @@ export async function getLineStatus(lines: string[]): Promise<LineStatus[]> {
   const response = await fetch(`${TFL_API_BASE}/Line/${lineIds}/Status`, {
     headers: {
       'Accept': 'application/json',
+      'app_key': TFL_API_KEY
     },
   });
 
@@ -34,6 +37,7 @@ export async function getAllTubeStatus(): Promise<LineStatus[]> {
   const response = await fetch(`${TFL_API_BASE}/Line/Mode/tube/Status`, {
     headers: {
       'Accept': 'application/json',
+      'app_key': TFL_API_KEY
     },
   });
 
@@ -52,6 +56,7 @@ export async function getAllLines(): Promise<LineStatus[]> {
   const response = await fetch(`${TFL_API_BASE}/Line/Mode/tube,overground,elizabeth-line,dlr,tram/Status`, {
     headers: {
       'Accept': 'application/json',
+      'app_key': TFL_API_KEY
     },
   });
 
@@ -73,6 +78,7 @@ export async function searchStations(query: string): Promise<any[]> {
     {
       headers: {
         'Accept': 'application/json',
+        'app_key': TFL_API_KEY
       },
     }
   );
@@ -132,6 +138,7 @@ export async function getArrivals(
     {
       headers: {
         'Accept': 'application/json',
+        'app_key': TFL_API_KEY
       },
     }
   );
@@ -188,6 +195,7 @@ export async function getStationArrivals(
       const arrivalsResponse = await fetch(url, {
         headers: {
           'Accept': 'application/json',
+          'app_key': TFL_API_KEY
         },
       });
 
@@ -393,6 +401,7 @@ export async function getStationDisruptions(
   const response = await fetch(url, {
     headers: {
       'Accept': 'application/json',
+      'app_key': TFL_API_KEY,
     },
   });
 
@@ -420,6 +429,7 @@ export async function getStationInfo(stopPointId: string): Promise<any> {
   const response = await fetch(url, {
     headers: {
       'Accept': 'application/json',
+      'app_key': TFL_API_KEY,
     },
   });
 
